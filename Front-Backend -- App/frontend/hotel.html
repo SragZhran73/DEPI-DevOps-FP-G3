@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .hotel-details { margin: 20px; }
+    </style>
+    <script>
+        async function fetchHotelDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const hotelId = params.get('id');
+            const response = await fetch(`http://backend:5000/hotel/${hotelId}`);
+            const hotel = await response.json();
+            document.getElementById('hotel-details').innerHTML = `
+                <h1>${hotel.Name}</h1>
+                <p><strong>Chief:</strong> ${hotel.Chief}</p>
+                <p><strong>Location:</strong> ${hotel.Location}</p>
+                <p><strong>Rating:</strong> ${hotel.Rating}</p>
+                <p><strong>Facilities:</strong> ${hotel.Facilities}</p>
+            `;
+        }
+        window.onload = fetchHotelDetails;
+    </script>
+</head>
+<body>
+    <div id="hotel-details" class="hotel-details"></div>
+</body>
+</html>
