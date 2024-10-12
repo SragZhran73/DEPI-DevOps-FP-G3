@@ -12,6 +12,12 @@ RUN pip3 install -r requirements.txt
 COPY app.py .
 
 
+
+ENV DB_HOST=ec2-18-208-9-152.compute-1.amazonaws.com
+ENV DB_USER=newuser
+ENV DB_PASSWORD=8520
+ENV DB_NAME=Demo
+
 EXPOSE 5000
 
 

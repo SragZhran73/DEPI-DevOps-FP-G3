@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS  # Import CORS
 import mysql.connector
 import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
-# Get database configuration from environment variables
+# Load database configuration from environment variables
 DB_CONFIG = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
