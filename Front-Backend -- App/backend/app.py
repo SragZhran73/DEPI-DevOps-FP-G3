@@ -20,7 +20,7 @@ def get_db_connection():
 
 @app.route('/')
 def home():
-    return "Welcome to the Hotel "
+    return "Welcome to the DEV-IT-OPS Hotel "
 
 
 @app.route('/hotels', methods=['GET'])
