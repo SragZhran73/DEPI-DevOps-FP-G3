@@ -18,7 +18,7 @@ def get_db_connection():
     conn = mysql.connector.connect(**DB_CONFIG)
     return conn
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return "Welcome to the DEV-IT-OPS Hotel "
 
