@@ -1,43 +1,76 @@
+// pipeline {
+//     agent any
+
+//     environment {
+//         DOCKER_HUB_CREDENTIALS = 'dockerhub_cred'
+//         DOCKER_HUB_REPO_FRONTEND = 'sragzhran/frontend_depi_project'  
+//         DOCKER_HUB_REPO_BACKEND = 'sragzhran/backend_depi_project'    
+//         IMAGE_TAG = "V${env.BUILD_NUMBER}" 
+//     }
+
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 checkout scmGit(
+//                     branches: [[name: '*/main']], 
+//                     extensions: [], 
+//                     userRemoteConfigs: [[credentialsId: 'github-cred', url: 'https://github.com/SragZhran73/DEPI-DevOps-FP-G3.git']]
+//                 )
+//             }
+//         }
+
+//         stage('Build Front & Back Images') {
+//             steps {
+//                 script {
+//                     docker.build("${DOCKER_HUB_REPO_FRONTEND}:${IMAGE_TAG}", "app/frontend")
+//                     docker.build("${DOCKER_HUB_REPO_BACKEND}:${IMAGE_TAG}", "app/backend")
+//                 }
+//             }
+//         }
+
+//         stage('Login and Push Images to Docker Hub') {
+//             steps {
+//                 script {
+//                     // Login to Docker Hub and push images
+//                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_CREDENTIALS) {
+                        
+//                         docker.image("${DOCKER_HUB_REPO_FRONTEND}:${IMAGE_TAG}").push()
+//                         docker.image("${DOCKER_HUB_REPO_BACKEND}:${IMAGE_TAG}").push()
+                        
+//                         echo "Successfully pushed frontend and backend images to Docker Hub"
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'dockerhub_cred'
-        DOCKER_HUB_REPO_FRONTEND = 'sragzhran/frontend_depi_project'  
-        DOCKER_HUB_REPO_BACKEND = 'sragzhran/backend_depi_project'    
-        IMAGE_TAG = "V${env.BUILD_NUMBER}" 
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')  // Jenkins credentials ID for AWS Access Key
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')  // Jenkins credentials ID for AWS Secret Key
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scmGit(
-                    branches: [[name: '*/main']], 
-                    extensions: [], 
+                    branches: [[name: '*/main']],
+                    extensions: [],
                     userRemoteConfigs: [[credentialsId: 'github-cred', url: 'https://github.com/SragZhran73/DEPI-DevOps-FP-G3.git']]
                 )
             }
         }
 
-        stage('Build Front & Back Images') {
+        stage('Terraform Plan') {
             steps {
-                script {
-                    docker.build("${DOCKER_HUB_REPO_FRONTEND}:${IMAGE_TAG}", "app/frontend")
-                    docker.build("${DOCKER_HUB_REPO_BACKEND}:${IMAGE_TAG}", "app/backend")
-                }
-            }
-        }
-
-        stage('Login and Push Images to Docker Hub') {
-            steps {
-                script {
-                    // Login to Docker Hub and push images
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_CREDENTIALS) {
-                        
-                        docker.image("${DOCKER_HUB_REPO_FRONTEND}:${IMAGE_TAG}").push()
-                        docker.image("${DOCKER_HUB_REPO_BACKEND}:${IMAGE_TAG}").push()
-                        
-                        echo "Successfully pushed frontend and backend images to Docker Hub"
+                dir('Terraform') {  // Change directory to where your main.tf file is located
+                    script {
+                        sh '''
+                        terraform init
+                        terraform plan
+                        '''
                     }
                 }
             }
