@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('Terraform Plan') {
+        stage('Terraform apply') {
             steps {
                 dir('Terraform') {  // Change directory to where your main.tf file is located
                     script {
@@ -66,6 +66,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Terraform destroy') {
+            steps {
+                dir('Terraform') {  // Change directory to where your main.tf file is located
+                    script {
+                        sh '''
+                        terraform init
+                        sleep 240
+                        terraform destroy -auto-approve
+                        '''
+                    }
+                }
+            }
+        }
+
 
     }
 }
