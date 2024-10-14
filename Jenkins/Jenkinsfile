@@ -66,5 +66,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Final Stage - Await Approval') {
+            steps {
+                script {
+                    input message: 'Do you approve the final stage?'
+                    echo "Final stage approved!"
+                }
+            }
+        }
     }
 }
