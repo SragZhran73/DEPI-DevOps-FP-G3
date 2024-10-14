@@ -60,20 +60,12 @@ pipeline {
                     script {
                         sh '''
                         terraform init
-                        terraform plan
+                        terraform apply -auto-approve
                         '''
                     }
                 }
             }
         }
 
-        stage('Final Stage - Await Approval') {
-            steps {
-                script {
-                    input message: 'Do you approve the final stage?'
-                    echo "Final stage approved!"
-                }
-            }
-        }
     }
 }
