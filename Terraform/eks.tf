@@ -4,7 +4,7 @@
 
 #   cluster_name                   = "DEPI_control_cluster"
 #   cluster_endpoint_public_access = true
-#   vpc_id                         = data.aws_vpc.my_existing_vpc.id
+#   vpc_id                         = aws_vpc.eks-vpc.id
 
 #   # Use both subnets from different AZs for worker nodes and control plane
 #   subnet_ids               = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
