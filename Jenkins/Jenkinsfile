@@ -53,20 +53,16 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Terraform apply') {
-            steps {
-                dir('Terraform') {  // Change directory to where your main.tf file is located
-                    script {
-                        sh '''
-                        terraform init
-                        terraform apply -auto-approve
-                        '''
-                    }
-                }
-            }
+    post {
+        success {
+            // Trigger infra_deployment pipeline if this pipeline is successful
+            build job: 'infra_deployment', wait: false
+            echo 'Successfully triggered infra_deployment pipeline'
         }
-
-
+        failure {
+            echo 'ci_pipeline failed, infra_deployment will not be triggered'
+        }
     }
 }
