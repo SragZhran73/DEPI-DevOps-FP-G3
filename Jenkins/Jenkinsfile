@@ -59,7 +59,7 @@ pipeline {
                 dir('Terraform') {  // Change directory to where your main.tf file is located
                     script {
                         sh '''
-                        terraform init
+                        terraform init -backend-config="path=/var/jenkins_home/tf_state/terraform.tfstate"
                         terraform apply -auto-approve
                         '''
                     }
@@ -67,19 +67,7 @@ pipeline {
             }
         }
 
-        stage('Terraform destroy') {
-            steps {
-                dir('Terraform') {  // Change directory to where your main.tf file is located
-                    script {
-                        sh '''
-                        terraform init
-                        sleep 240
-                        terraform destroy -auto-approve
-                        '''
-                    }
-                }
-            }
-        }
+
 
 
     }

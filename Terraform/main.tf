@@ -1,35 +1,35 @@
-provider "aws" {
-  region = "us-east-1" # Don't change the region
-}
+# provider "aws" {
+#   region = "us-east-1" # Don't change the region
+# }
 
-# Fetch the existing VPC
-data "aws_vpc" "my_existing_vpc" {
-  id = "vpc-02501dbf1387f15c0"
-}
+# # Fetch the existing VPC
+# data "aws_vpc" "my_existing_vpc" {
+#   id = "vpc-02501dbf1387f15c0"
+# }
 
-# Fetch the existing subnet named 'public-subnet'
-data "aws_subnet" "public_subnet" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.my_existing_vpc.id]
-  }
+# # Fetch the existing subnet named 'public-subnet'
+# data "aws_subnet" "public_subnet" {
+#   filter {
+#     name   = "vpc-id"
+#     values = [data.aws_vpc.my_existing_vpc.id]
+#   }
 
-  filter {
-    name   = "tag:Name"
-    values = ["public-subnet"] # Ensure your subnet is tagged as 'public-subnet'
-  }
-}
+#   filter {
+#     name   = "tag:Name"
+#     values = ["public-subnet"] # Ensure your subnet is tagged as 'public-subnet'
+#   }
+# }
 
 
-resource "aws_subnet" "private_subnet_1" {
-  vpc_id            = data.aws_vpc.my_existing_vpc.id
-  cidr_block        = "172.31.150.0/24"
-  availability_zone = "us-east-1a" # Specify the availability zone
+# resource "aws_subnet" "private_subnet_1" {
+#   vpc_id            = data.aws_vpc.my_existing_vpc.id
+#   cidr_block        = "172.31.150.0/24"
+#   availability_zone = "us-east-1a" # Specify the availability zone
 
-  tags = {
-    Name = "private-subnet-1"
-  }
-}
+#   tags = {
+#     Name = "private-subnet-1"
+#   }
+# }
 
 # resource "aws_subnet" "private_subnet_2" {
 #   vpc_id            = data.aws_vpc.my_existing_vpc.id
@@ -62,7 +62,7 @@ resource "aws_subnet" "private_subnet_1" {
 #   }
 # }
 
-# # Associate private_subnet_1 with private-route-table
+# Associate private_subnet_1 with private-route-table
 # resource "aws_route_table_association" "private_assoc_1" {
 #   subnet_id      = aws_subnet.private_subnet_1.id
 #   route_table_id = aws_route_table.private.id
