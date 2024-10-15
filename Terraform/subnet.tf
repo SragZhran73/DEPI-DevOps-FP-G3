@@ -22,12 +22,12 @@ resource "aws_subnet" "private_subnet_1" {
   }
 }
 
-resource "aws_subnet" "private_subnet_2" {
-  vpc_id            = data.aws_vpc.my_existing_vpc.id
-  cidr_block        = "172.31.160.0/24"
-  availability_zone = "us-east-1b" # Specify the availability zone
+# resource "aws_subnet" "private_subnet_2" {
+#   vpc_id            = data.aws_vpc.my_existing_vpc.id
+#   cidr_block        = "172.31.160.0/24"
+#   availability_zone = "us-east-1b" # Specify the availability zone
 
-  tags = {
-    Name = "private-subnet-2"
-  }
-}
+#   tags = {
+#     Name = "private-subnet-2"
+#   }
+# }

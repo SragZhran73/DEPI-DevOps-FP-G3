@@ -67,20 +67,6 @@ pipeline {
             }
         }
 
-        stage('Terraform destroy') {
-            steps {
-                dir('Terraform') {  // Change directory to where your main.tf file is located
-                    script {
-                        sh '''
-                        terraform init
-                        sleep 180
-                        terraform destroy -auto-approve
-                        '''
-                    }
-                }
-            }
-        }
-
 
     }
 }
