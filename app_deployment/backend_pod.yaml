@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-depi-pod
+  labels:
+    app: backend-depi
+spec:
+  containers:
+  - name: backend-depi-container
+    image: sragzhran/backend_depi_project:latest
+    ports:
+    - containerPort: 5000

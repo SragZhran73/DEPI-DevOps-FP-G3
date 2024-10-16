@@ -1,0 +1,10 @@
+
+Terraform/terraform.tfstate
+Terraform/terraform.tfstate.backup
+
+
+Terraform/.terraform/
+
+
+*.tfvars
+*.log
