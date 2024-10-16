@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-depi-pod
+  labels:
+    app: frontend-depi
+spec:
+  containers:
+  - name: frontend-depi-container
+    image: sragzhran/frontend_depi_project:latest 
+    ports:
+    - containerPort: 80
