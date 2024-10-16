@@ -39,4 +39,28 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            slackSend(
+                channel: "depi_g3",
+                color: "good",
+                message: """
+                ${env.JOB_NAME}
+                Your Infrastructure is successfully deployed
+                """
+            )
+        }
+        failure {
+            slackSend(
+                channel: "depi_g3",
+                color: "danger",
+                message: """
+                ${env.JOB_NAME}
+                Your Infrastructure failed to deploy
+                """
+            )
+        }
+    }
+
 }

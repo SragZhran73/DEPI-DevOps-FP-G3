@@ -60,9 +60,30 @@ pipeline {
             // Trigger infra_deployment pipeline if this pipeline is successful
             build job: 'infra_deployment', wait: false
             echo 'Successfully triggered infra_deployment pipeline'
+            
+            slackSend(
+                channel: "depi_g3",
+                color: "good",
+                /* groovylint-disable-next-line LineLength */
+                message: """
+                ${env.JOB_NAME} is successfully with build no. ${IMAGE_TAG} URL: (<${env.BUILD_URL}|Open>)
+                Build status is ${currentBuild.currentResult}
+                 The pipeline is running on agent: ${env.NODE_NAME}
+                """
+            )
         }
         failure {
             echo 'ci_pipeline failed, infra_deployment will not be triggered'
+            slackSend(
+                channel: "depi_g3",
+                color: "danger",
+                /* groovylint-disable-next-line LineLength */
+                message: """
+                ${env.JOB_NAME} is failure with build no. ${IMAGE_TAG} URL: (<${env.BUILD_URL}|Open>)
+                Build status is ${currentBuild.currentResult}
+                 The pipeline is running on agent: ${env.NODE_NAME}
+                """
+            )
         }
     }
 }
