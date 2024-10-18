@@ -15,25 +15,13 @@ module "eks" {
 
   # Fargate Profile Configuration for backend and frontend
   fargate_profiles = {
-    frontend = {
-      name = "fargate-frontend"
+    Application_profile = {
+      name = "fargate-Application_profile"
       selectors = [
         {
-          namespace = "frontend"
+          namespace = "Application_profile"
           labels = {
-            app = "frontend"
-          }
-        }
-      ]
-    }
-
-    backend = {
-      name = "fargate-backend"
-      selectors = [
-        {
-          namespace = "backend"
-          labels = {
-            app = "backend"
+            app = "Application_profile"
           }
         }
       ]
