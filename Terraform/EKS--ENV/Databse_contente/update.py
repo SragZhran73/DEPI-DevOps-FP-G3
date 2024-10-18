@@ -1,28 +1,38 @@
-import pyodbc
-try:
-    myconnection = pyodbc.connect(
-        DSN='RDS_HOST',
-        server='RDS_USERNAME',
-        database='RDS_DB_NAME',
-        password='RDS_PASSWORD',
-        # driver='{ODBC Driver 18 for SQL Server}'
-        # username='DESKTOP-AS4PUFE\\amr fathy',
-    )
+import pymysql
+import os
 
-    print("Connection succeeded!")
+def lambda_handler(event, context):
+    # Fetch environment variables set in Lambda configuration
+    rds_host = os.getenv('RDS_HOST')
+    rds_username = os.getenv('RDS_USERNAME')
+    rds_password = os.getenv('RDS_PASSWORD')
+    rds_db_name = os.getenv('RDS_DB_NAME')
 
-    with open('table-set.sql', 'r') as file:
-            BD_table = file.read()
-    with open('data-set.sql', 'r') as file:
-            BD_filling = file.read()
+    try:
+        # Establishing connection to the MySQL RDS
+        connection = pymysql.connect(
+            host=rds_host,
+            user=rds_username,
+            password=rds_password,
+            database=rds_db_name,
+            connect_timeout=5
+        )
+        print("Connection succeeded!")
 
-    cursor = myconnection.cursor()
-    cursor.execute(BD_table)
-    # cursor.execute(BD_filling)
-    print("Query execution confirmed!")
+        # Read and execute SQL scripts
+        with open('/tmp/table-set.sql', 'r') as file:
+            bd_table = file.read()
+        with open('/tmp/data-set.sql', 'r') as file:
+            bd_filling = file.read()
 
-except Exception as e:
-    print(f"Error: {str(e)}")
-finally:
-    myconnection.commit()
-    myconnection.close()
+        cursor = connection.cursor()
+        cursor.execute(bd_table)
+        cursor.execute(bd_filling)
+        print("Query execution confirmed!")
+
+        connection.commit()
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+    finally:
+        connection.close()
