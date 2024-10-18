@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .hotel-details { margin: 20px; }
+        .error { color: red; }
+    </style>
+    <script>
+        async function fetchHotelDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const hotelId = params.get('id');
+
+            if (!hotelId) {
+                document.getElementById('hotel-details').innerHTML = '<p class="error">Hotel ID is missing.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://backend:5000/hotel/${hotelId}`);
+                if (!response.ok) {
+                    throw new Error('Hotel not found');
+                }
+                const hotel = await response.json();
+                document.getElementById('hotel-details').innerHTML = `
+                    <h1>${hotel.Name}</h1>
+                    <p><strong>Chief:</strong> ${hotel.Chief || 'N/A'}</p>
+                    <p><strong>Location:</strong> ${hotel.Location || 'N/A'}</p>
+                    <p><strong>Rating:</strong> ${hotel.Rating !== null ? hotel.Rating : 'N/A'}</p>
+                    <p><strong>Facilities:</strong> ${hotel.Facilities || 'N/A'}</p>
+                `;
+            } catch (error) {
+                document.getElementById('hotel-details').innerHTML = `<p class="error">${error.message}</p>`;
+            }
+        }
+
+        window.onload = fetchHotelDetails;
+    </script>
+</head>
+<body>
+    <div id="hotel-details" class="hotel-details"></div>
+</body>
+</html>
