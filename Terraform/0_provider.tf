@@ -1,4 +1,11 @@
 terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.72"  # Update to a valid version
+    }
+  }
+  
   backend "s3" {
     bucket         = "tf-backend-bucket-73"
     key            = "global/terraform.tfstate"
@@ -7,6 +14,7 @@ terraform {
     encrypt        = true
   }
 }
+
 
 
 

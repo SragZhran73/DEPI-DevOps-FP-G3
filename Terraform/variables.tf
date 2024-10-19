@@ -22,10 +22,10 @@ variable "DB-name" {
 
 
 
-variable "Frontend_Image" {
-}
+# variable "Frontend_Image" {
+# }
 
-variable "Backend_Image" {
-}
+# variable "Backend_Image" {
+# }
 
 
