@@ -5,18 +5,18 @@ resource "aws_security_group" "alb_sg" {
   vpc_id = aws_vpc.eks_vpc.id
 }
 
-resource "aws_vpc_security_group_egress_rule" "_HTTP" {
+resource "aws_vpc_security_group_ingress_rule" "_HTTP" {
   security_group_id = aws_security_group.alb_sg.id
 
-  cidr_ipv4   = aws_vpc.eks_vpc.cidr_block
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = 80
   ip_protocol = "tcp"
   to_port     = 80
 }
-resource "aws_vpc_security_group_egress_rule" "_HTTPS" {
+resource "aws_vpc_security_group_ingress_rule" "_HTTPS" {
   security_group_id = aws_security_group.alb_sg.id
 
-  cidr_ipv4   = aws_vpc.eks_vpc.cidr_block
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = 443
   ip_protocol = "tcp"
   to_port     = 443
