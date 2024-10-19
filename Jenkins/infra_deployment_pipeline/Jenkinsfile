@@ -42,6 +42,9 @@ pipeline {
 
     post {
         success {
+            build job: 'CD_pipeline', wait: false
+            echo 'Successfully triggered CD_pipeline pipeline'
+            
             slackSend(
                 channel: "depi_g3",
                 color: "good",

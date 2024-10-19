@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = 'dockerhub_cred'
+        DOCKER_HUB_REPO_FRONTEND = 'sragzhran/frontend_depi_project'
+        DOCKER_HUB_REPO_BACKEND = 'sragzhran/backend_depi_project'
+        IMAGE_TAG = "V${env.BUILD_NUMBER}"
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')  // Ensure 'aws-access-key-id' matches the credentials ID in Jenkins
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')  // Ensure 'aws-secret-access-key' matches the credentials ID in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'github-cred', 
+                        url: 'https://github.com/SragZhran73/DEPI-DevOps-FP-G3.git'
+                    ]]
+                )
+            }
+        }
+
+        stage('app deployment') {
+            steps {
+                dir('app_deployment') {  
+                    script {
+                        sh '''
+                        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                        aws eks --region us-east-1 update-kubeconfig --name DEPI_control_cluster1
+                        kubectl apply -f frontend_pod.yaml 
+                        kubectl apply -f backend_pod.yaml
+                        kubectl apply -f loadbalancer.yaml
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend(
+                channel: "depi_g3",
+                color: "good",
+                message: """
+                ${env.JOB_NAME}
+                Your Infrastructure is successfully deployed
+                """
+            )
+        }
+        failure {
+            slackSend(
+                channel: "depi_g3",
+                color: "danger",
+                message: """
+                ${env.JOB_NAME}
+                Your Infrastructure failed to deploy
+                """
+            )
+        }
+    }
+
+}
