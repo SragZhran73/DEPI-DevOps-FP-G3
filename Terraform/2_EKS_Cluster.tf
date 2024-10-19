@@ -15,8 +15,8 @@ module "eks" {
 
   vpc_id = aws_vpc.eks_vpc.id
   # Use private subnets for worker nodes and control plane
-  subnet_ids               = [aws_subnet._prSubnet_1.id, aws_subnet._prSubnet_2.id] # For worker nodes
-  control_plane_subnet_ids = [aws_subnet._prSubnet_1.id, aws_subnet._prSubnet_2.id] # For the control plane
+  subnet_ids               = [aws_subnet._pubSubnet_1.id, aws_subnet._prSubnet_2.id] # For worker nodes
+  control_plane_subnet_ids = [aws_subnet._pubSubnet_1.id, aws_subnet._prSubnet_2.id] # For the control plane
   
 
 
